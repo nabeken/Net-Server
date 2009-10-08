@@ -24,9 +24,10 @@ package Net::Server::Proto::TCP;
 use strict;
 use vars qw($VERSION $AUTOLOAD @ISA);
 use IO::Socket ();
+use IO::Socket::INET6;
 
 $VERSION = $Net::Server::VERSION; # done until separated
-@ISA = qw(IO::Socket::INET);
+@ISA = qw(IO::Socket::INET6);
 
 sub object {
   my $type  = shift;
@@ -80,9 +81,11 @@ sub connect {
   my %args = ();
   $args{LocalPort} = $port;                  # what port to bind on
   $args{Proto}     = 'tcp';                  # what procol to use
-  $args{LocalAddr} = $host if $host !~ /\*/; # what local address (* is all)
+
+  # protocol independent
+  $args{LocalAddr} = $host;                  # what local address (* is all)
   $args{Listen}    = $prop->{listen};        # how many connections for kernel to queue
-  $args{Reuse}     = 1;  # allow us to rebind the port on a restart
+  $args{Reuse}     = 1;                      # allow us to rebind the port on a restart
 
   ### connect to the sock
   $sock->SUPER::configure(\%args)
