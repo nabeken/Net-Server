@@ -25,7 +25,8 @@ package Net::Server;
 
 use strict;
 use vars qw($VERSION);
-use Socket qw(inet_aton inet_ntoa AF_INET AF_UNIX SOCK_DGRAM SOCK_STREAM);
+use Socket qw(AF_INET AF_UNIX SOCK_DGRAM SOCK_STREAM);
+use Socket6 qw(AF_INET6 NI_DGRAM NI_NUMERICHOST NI_NUMERICSERV AI_PASSIVE getaddrinfo getnameinfo);
 use IO::Socket ();
 use IO::Select ();
 use POSIX ();
