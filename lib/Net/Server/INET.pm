@@ -176,6 +176,9 @@ sub DESTROY {}
 sub FILENO {}
 
 sub FETCH {}
+
+sub sockname {}
+sub sockdomain {}
 1;
 
 
