@@ -7,9 +7,11 @@ my %args =
    ABSTRACT_FROM => 'lib/Net/Server.pod',
    AUTHOR        => 'Paul Seamons (paul@seamons.com) and Rob Brown (bbb@cpan.org)',
    PREREQ_PM  => {
-     'IO::Socket' => 0,
-     Socket       => 0,
-     POSIX        => 0,
+     'IO::Socket'        => 0,
+     'IO::Socket::INET6' => 0,
+     Socket              => 0,
+     Socket6             => 0,
+     POSIX               => 0,
    },
 
    dist          => {
