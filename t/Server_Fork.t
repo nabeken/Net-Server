@@ -20,7 +20,7 @@ print "ok 2 - We can fork $$ ($@)\n";
 package Net::Server::Test;
 @ISA = qw(Net::Server::Fork);
 
-use IO::Socket;
+use IO::Socket::INET6;
 local $SIG{ALRM} = sub { die };
 my $alarm = 5;
 
@@ -54,7 +54,7 @@ my $start_port = 20200;
 my $num_ports  = 1;
 my @ports      = ();
 for my $i (0..99){
-  my $sock = IO::Socket::INET->new(PeerAddr => 'localhost',
+  my $sock = IO::Socket::INET6->new(PeerAddr => 'localhost',
 				   PeerPort => ($start_port + $i),
                                    Timeout  => 2,
 				   Proto    => 'tcp');
@@ -111,7 +111,7 @@ if (! $fork || ! $pipe) {
             <READ>; ### wait until the parent accept writes to us
 
             ### connect to child
-            my $remote = IO::Socket::INET->new(PeerAddr => 'localhost',
+            my $remote = IO::Socket::INET6->new(PeerAddr => 'localhost',
                                                PeerPort => $ports[0],
                                                Proto    => 'tcp');
             die unless defined $remote;

@@ -28,7 +28,7 @@ print "not ok 2\n" if $@;
 package Net::Server::Test;
 @ISA = qw(Net::Server);
 
-use IO::Socket ();
+use IO::Socket::INET6 ();
 use POSIX qw(tmpnam);
 use English qw($UID $GID);
 
@@ -67,7 +67,7 @@ my $start_port = 20700;
 my $num_ports  = 1;
 my @ports      = ();
 for my $i (0..99){
-  my $sock = IO::Socket::INET->new(PeerAddr => 'localhost',
+  my $sock = IO::Socket::INET6->new(PeerAddr => 'localhost',
 				   PeerPort => ($start_port + $i),
                                    Timeout  => 2,
 				   Proto    => 'tcp');
@@ -125,7 +125,7 @@ if( $fork && $pipe ){
       die "No line returned" unless $line =~ /Net::Server/;
 
       ### connect to child under tcp
-      $remote = IO::Socket::INET->new(PeerAddr => 'localhost',
+      $remote = IO::Socket::INET6->new(PeerAddr => 'localhost',
                                       PeerPort => $ports[0],
                                       Proto    => 'tcp');
       die "No socket returned [$!]" unless defined $remote;

@@ -17,7 +17,7 @@ END { ok 0 unless $success; }
 
 ### load the module
 use Net::Server::Multiplex;
-use IO::Socket;
+use IO::Socket::INET6;
 ok 1;
 
 @ISA = qw(Net::Server::Multiplex);
@@ -83,7 +83,7 @@ my $start_port = 20200;
 my $num_ports  = 1;
 my @ports      = ();
 for my $i (0..99){
-  my $sock = IO::Socket::INET->new(PeerAddr => 'localhost',
+  my $sock = IO::Socket::INET6->new(PeerAddr => 'localhost',
 				   PeerPort => ($start_port + $i),
                                    Timeout  => 2,
 				   Proto    => 'tcp');
@@ -111,7 +111,7 @@ if( $pid ){
   <READ>; ### wait until the child writes to us
 
   ### connect to child
-  my $remote = IO::Socket::INET->new(PeerAddr => 'localhost',
+  my $remote = IO::Socket::INET6->new(PeerAddr => 'localhost',
                                      PeerPort => $ports[0],
                                      Proto    => 'tcp');
   die unless defined $remote;

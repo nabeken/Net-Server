@@ -29,7 +29,7 @@ package Net::Server::Test;
 use Net::Server::PreFork;
 
 @ISA = qw(Net::Server::PreFork);
-use IO::Socket;
+use IO::Socket::INET6;
 local $SIG{ALRM} = sub { die };
 my $alarm = 5;
 
@@ -67,7 +67,7 @@ my $start_port = 20500;
 my $num_ports  = 2;
 my @ports      = ();
 for my $i (0..99){
-  my $sock = IO::Socket::INET->new(PeerAddr => 'localhost',
+  my $sock = IO::Socket::INET6->new(PeerAddr => 'localhost',
 				   PeerPort => ($start_port + $i),
                                    Timeout  => 2,
 				   Proto    => 'tcp');
@@ -116,7 +116,7 @@ if( $fork && $pipe){
       <READ>; ### wait until the child writes to us
 
       ### connect to first bound port on child
-      my $remote = IO::Socket::INET->new(PeerAddr => 'localhost',
+      my $remote = IO::Socket::INET6->new(PeerAddr => 'localhost',
                                          PeerPort => $ports[0],
                                          Proto    => 'tcp');
       die unless defined $remote;
@@ -131,7 +131,7 @@ if( $fork && $pipe){
 
 
       ### connect to second bound port on child
-      $remote = IO::Socket::INET->new(PeerAddr => 'localhost',
+      $remote = IO::Socket::INET6->new(PeerAddr => 'localhost',
                                       PeerPort => $ports[1],
                                       Proto    => 'tcp');
       die unless defined $remote;

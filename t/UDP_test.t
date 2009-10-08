@@ -23,7 +23,7 @@ print "not ok 2\n" if $@;
 ### become a new type of server
 package Net::Server::Test;
 @ISA = qw(Net::Server);
-use IO::Socket;
+use IO::Socket::INET6;
 local $SIG{ALRM} = sub { die "timeout"; };
 my $alarm = 5;
 
@@ -59,7 +59,7 @@ my $start_port = 20600;
 my $num_ports  = 1;
 my @ports      = ();
 for my $i (0..99){
-  my $sock = IO::Socket::INET->new(PeerAddr => 'localhost',
+  my $sock = IO::Socket::INET6->new(PeerAddr => 'localhost',
 				   PeerPort => ($start_port + $i),
                                    Timeout  => 2,
 				   Proto    => 'tcp');
@@ -108,7 +108,7 @@ if( $fork && $pipe ){
       <READ>; ### wait until the child writes to us
 
       ### connect to child under udp
-      my $remote = IO::Socket::INET->new(PeerAddr => 'localhost',
+      my $remote = IO::Socket::INET6->new(PeerAddr => 'localhost',
                                          PeerPort => $ports[0],
                                          Proto    => 'udp');
       ### send a packet, get a packet
@@ -119,7 +119,7 @@ if( $fork && $pipe ){
 
 
       ### connect to child under tcp
-      $remote = IO::Socket::INET->new(PeerAddr => 'localhost',
+      $remote = IO::Socket::INET6->new(PeerAddr => 'localhost',
                                       PeerPort => $ports[0],
                                       Proto    => 'tcp');
       die "No socket returned" unless defined $remote;

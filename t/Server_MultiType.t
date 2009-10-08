@@ -23,7 +23,7 @@ print "not ok 2\n" if $@;
 ### become a new type of server
 package Net::Server::Test;
 @ISA = qw(Net::Server::MultiType);
-use IO::Socket;
+use IO::Socket::INET6;
 local $SIG{ALRM} = sub { die };
 my $alarm = 5;
 
@@ -59,7 +59,7 @@ my $start_port = 20400;
 my $num_ports  = 1;
 my @ports      = ();
 for my $i (0..99){
-  my $sock = IO::Socket::INET->new(PeerAddr => 'localhost',
+  my $sock = IO::Socket::INET6->new(PeerAddr => 'localhost',
 				   PeerPort => ($start_port + $i),
                                    Timeout  => 2,
 				   Proto    => 'tcp');
@@ -107,7 +107,7 @@ if( $fork && $pipe ){
       <READ>; ### wait until the child writes to us
 
       ### connect to child
-      my $remote = IO::Socket::INET->new(PeerAddr => 'localhost',
+      my $remote = IO::Socket::INET6->new(PeerAddr => 'localhost',
                                          PeerPort => $ports[0],
                                          Proto    => 'tcp');
       die unless defined $remote;
