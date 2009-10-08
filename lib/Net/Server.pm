@@ -742,43 +742,56 @@ sub get_client_info {
   }
 
   ### read information about this connection
-  my $sockname = getsockname( $sock );
+  my $family = $sock->sockdomain;
+  my $sockname = $sock->sockname;
+
   if( $sockname ){
-    ($prop->{sockport}, $prop->{sockaddr})
-      = Socket::unpack_sockaddr_in( $sockname );
-    $prop->{sockaddr} = inet_ntoa( $prop->{sockaddr} );
+    ($prop->{sockaddr}, $prop->{sockport}) = getnameinfo( $sockname, NI_NUMERICHOST | NI_NUMERICSERV );
 
   }else{
-    ### does this only happen from command line?
-    $prop->{sockaddr} = '0.0.0.0';
-    $prop->{sockhost} = 'inet.test';
-    $prop->{sockport} = 0;
+      if( $family == AF_INET ){
+	### does this only happen from command line?
+	$prop->{sockaddr} = '0.0.0.0';
+	$prop->{sockhost} = 'inet.test';
+	$prop->{sockport} = 0;
+      } elsif( $family == AF_INET6 ){
+	$prop->{sockaddr} = '::';
+	$prop->{sockhost} = 'inet.test';
+	$prop->{sockport} = 0;
+      }
   }
 
   ### try to get some info about the remote host
   my $proto_type = 'TCP';
+
   if( $prop->{udp_true} ){
     $proto_type = 'UDP';
-    ($prop->{peerport} ,$prop->{peeraddr})
-      = Socket::sockaddr_in( $prop->{udp_peer} );
-  }elsif( $prop->{peername} = getpeername( $sock ) ){
-    ($prop->{peerport}, $prop->{peeraddr})
-      = Socket::unpack_sockaddr_in( $prop->{peername} );
+    ($prop->{peeraddr} ,$prop->{peerport}) = getnameinfo( $prop->{udp_peer}, NI_DGRAM );
+
+  }else{
+    $prop->{peername} = getpeername( $sock );
+    ($prop->{peeraddr}, $prop->{peerport}) = getnameinfo( $prop->{peername}, NI_NUMERICHOST | NI_NUMERICSERV );
   }
 
   if( $prop->{peername} || $prop->{udp_true} ){
-    $prop->{peeraddr} = inet_ntoa( $prop->{peeraddr} );
+    #$prop->{peeraddr} = inet_ntoa( $prop->{peeraddr} );
 
     if( defined $prop->{reverse_lookups} ){
-      $prop->{peerhost} = gethostbyaddr( inet_aton($prop->{peeraddr}), AF_INET );
+      (undef, undef, undef, undef, $prop->{peerhost}) = getaddrinfo( $prop->{peeraddr}, 0 );
     }
     $prop->{peerhost} = '' unless defined $prop->{peerhost};
 
   }else{
-    ### does this only happen from command line?
-    $prop->{peeraddr} = '0.0.0.0';
-    $prop->{peerhost} = 'inet.test';
-    $prop->{peerport} = 0;
+    if( $family == AF_INET ){
+      ### does this only happen from command line?
+      $prop->{peeraddr} = '0.0.0.0';
+      $prop->{peerhost} = 'inet.test';
+      $prop->{peerport} = 0;
+    } elsif( $family == AF_INET6 ){
+      $prop->{peeraddr} = '::';
+      $prop->{peerhost} = 'inet.test';
+      $prop->{peerport} = 0;
+    }
   }
 
   $self->log(3,$self->log_time
