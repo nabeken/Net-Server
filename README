@@ -40,6 +40,7 @@ FEATURES
      * Protection against buffer overflow
      * Clean process flow
      * Extensibility
+     * IPv6 support (New!)
 
 DESCRIPTION
     "Net::Server" is an extensible, generic Perl server engine.

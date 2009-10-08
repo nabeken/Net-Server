@@ -38,7 +38,7 @@ use Net::Server::Daemonize qw(check_pid_file create_pid_file
                               safe_fork
                               );
 
-$VERSION = '0.97';
+$VERSION = '0.97.20091008';
 
 ###----------------------------------------------------------------###
 
